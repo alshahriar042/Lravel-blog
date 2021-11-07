@@ -46,11 +46,13 @@
 
                     <div class="mt-4">
                         <h1 class="text-3xl">
-                            {{$posts[0]->title}}
+                            <a href="/posts/{{ $posts[0]->slug }}">
+                                {{$posts[0]->title}}
+                                </a>
                         </h1>
 
                         <span class="mt-2 block text-gray-400 text-xs">
-                                Published <time>{{$posts[0]->created_at}}</time>
+                                Published <time>{{$posts[0]->created_at->diffForHumans()}}</time>
                             </span>
                     </div>
                 </header>
@@ -108,11 +110,13 @@
 
                         <div class="mt-4">
                             <h1 class="text-3xl">
-                                {{$post->title}}
+                                <a href="/posts/{{ $post->slug }}">
+                                    {{$post->title}}
+                                    </a>
                              </h1>
 
                             <span class="mt-2 block text-gray-400 text-xs">
-                                Published <time>{{$post->created_at}}</time>
+                                Published <time>{{$post->created_at->diffForHumans()}}</time>
                             </span>
                         </div>
                     </header>
@@ -131,7 +135,7 @@
 
                             <img src=  "{{asset('images/lary-avatar.svg')}}" alt="Lary avatar">
                             <div class="ml-3">
-                                <h5 class="font-bold">Lary Laracore</h5>
+                                <h5 class="font-bold">{{$post->user->name}}</h5>
                                 <h6>Mascot at Laracasts</h6>
                             </div>
                         </div>

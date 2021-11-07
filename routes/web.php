@@ -26,7 +26,8 @@ Route::get('/', function () {
     $posts= Post::latest('created_at')->with('category','user')->get();
 
 return view('posts', [
-    'posts' => $posts
+    'posts' => $posts,
+    'categories'=>Category::all(),
 ]);
                    //2nd Approch
 
