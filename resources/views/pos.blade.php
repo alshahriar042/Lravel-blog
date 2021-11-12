@@ -344,7 +344,7 @@
             </div>
         </article> --}}
     </div>
-    {{ $posts->links() }}
+    {{-- {{ $posts->links() }} --}}
     @else
     <p>No posts Yet. Please Check back later</p>
     @endif

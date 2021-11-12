@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
@@ -18,17 +19,9 @@ use Illuminate\Support\Facades\Route;
 */
            //3rd Approch Collection
 
-Route::get('/', function () {
+Route::get('/', [PostController::class, 'index'])->name('home');
 
-    DB::listen(function($query){
-  logger($query->sql, $query->bindings);
-    });
-    $posts= Post::latest('created_at')->with('category','user')->get();
 
-return view('posts', [
-    'posts' => $posts,
-    'categories'=>Category::all(),
-]);
                    //2nd Approch
 
 // $post = array_map(function ($file){
@@ -68,31 +61,32 @@ return view('posts', [
     //     return view('posts',[
     //         'posts' =>$posts
     //     ]);
-});
 
-Route::get('posts/{post:slug}', function (Post $post) {
+
+Route::get('posts/{post:slug}', [PostController::class,'show'])->name('show');
 //find a post by its slug and pass ot view called "post"
 //$post=Post::findOrFail($id);
 //dd($post);
-return view('post',[
-'post'=>$post
-]);
+
+
 
   // return $slug;
 
- });
 
  Route::get('categories/{category:slug}', function (Category $category) {
-// $x=$category->posts;
-// dd($x);
+//  $x=$category->posts;
+//  dd($x);
     return view('posts',[
-    'posts'=>$category->posts
+    'posts'=>$category->posts,
+    'currentCategory' => $category,
+    'categories' => Category::all(),
+
     //->load(['category','user']) //loas use for optimization
     ]);
 
   // return $slug;
 
- });
+ })->name('cat');
 
  Route::get('users/{user:user_name}', function (User $user) {
     // $x=$user->posts;
