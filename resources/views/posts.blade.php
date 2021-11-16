@@ -1,4 +1,6 @@
 @extends('layout')
+@extends('category')
+
 @section('content')
 
 {{-- @foreach ($posts as $post)
@@ -151,9 +153,12 @@
                 </div>
             </div>
         </article>
+        {{-- {{ $posts->links() }} --}}
 
         @endforeach
     </div>
+    {{ $posts->links() }}
+    {{-- {{ $categories->links() }} --}}
 
     {{-- <div class="lg:grid lg:grid-cols-3">
 
@@ -344,9 +349,16 @@
             </div>
         </article> --}}
     </div>
-    {{ $posts->links() }}
+
+
+    {{-- {{ $categories->links() }} --}}
+
+
     @else
     <p>No posts Yet. Please Check back later</p>
     @endif
+
+
+
 </main>
 @endsection

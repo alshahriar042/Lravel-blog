@@ -13,15 +13,12 @@ class PostController extends Controller
     public function index(){
         DB::listen(function($query){
             logger($query->sql, $query->bindings);
-              });
-            //  $posts= Post::latest('created_at')->with('category','user')->get();
-           // $posts= Post::latest();
+        });
+            $posts = Post::paginate(10);
+            $categories = Category::paginate(10);
 
-            return view('posts', [
-                'posts' => $this->getPosts(),
-                'categories'=>Category::all(),
-            ]);
-            }
+            return view('posts', compact('posts', 'categories'));
+        }
 
      public function show(Post $post){
         return view('post',[
