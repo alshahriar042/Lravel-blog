@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostCommentsController;
+use App\Http\Controllers\AdminPostController;
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RegistrationController;
@@ -23,6 +24,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+     //ADMIN
+          Route::get('admin/posts/create', [PostController::class, 'create']) -> middleware('admin');
+          Route::post('admin/posts', [PostController::class, 'store'])->middleware('admin');
+          Route::get('admin/posts', [AdminPostController::class, 'index']);
+
+          Route::get('admin/posts/{post}/edit', [AdminPostController::class, 'edit'])->middleware('admin');
+
+
+
+
            //3rd Approch Collection
            Route::get('/', [PostController::class, 'index'])->name('home');
            Route::get('posts/{post:slug}', [PostController::class, 'show']);
@@ -34,6 +46,34 @@ use Illuminate\Support\Facades\Route;
            Route::post('login', [SessionController::class, 'store'])->middleware('guest');
            Route::post('logout', [SessionController::class, 'destroy'])->middleware('auth');
 
+           Route::post('newsletter', function () {
+
+             request()->validate([
+              'email' =>'required'
+            ]);
+
+            $mailchimp = new \MailchimpMarketing\ApiClient();
+
+            $mailchimp->setConfig([
+                'apiKey' => config('services.mailchimp.key'),
+                'server' => 'us20'
+            ]);
+           //dd($mailchimp);
+
+            try{
+                $response = $mailchimp->lists->addListMember('daef46cc86',[
+                    "email_address" => request('email'),
+                     "status" => "subscribe",
+                       ]);
+            } catch (\Exception $e){
+             throw \Illuminate\Validation\ValidationException::withMessages([
+                'email' => 'This email Could not not be added.'
+                ]);
+            }
+            //dd($response);
+
+                return redirect('/');
+                });
 
                    //2nd Approch
 
@@ -89,7 +129,7 @@ use Illuminate\Support\Facades\Route;
 //  $x=$category->posts;
 //  dd($x);
     return view('posts',[
-    'posts'=>$category->posts,
+    'posts'=>$category->posts()->paginate(10),
     'currentCategory' => $category,
     'categories' => Category::all(),
 
